@@ -1,0 +1,60 @@
+create hms;
+
+create table student_signup(username varchar(50) primary key,student_id varchar(50),password text,email text,secque text,answer text,foreign key(student_id) references student(student_id));
+
+create table admin_login(username varchar(50) primary key,admin_id varchar(50),password text,foreign key(admin_id) references warden(admin_id));
+
+create table warden(admin_id varchar(50) primary key,name text,cont_no bigint,address text,dob date);
+
+create table student(student_id varchar(50) primary key,name text,email text,cont_no bigint,dob date,room_id varchar(50),hostel_id varchar(50),bill_id varchar(50),mess_id varchar(50),address text,foreign key(room_id) references room(room_id),foreign key(hostel_id) references hostel(hostel_id),foreign key(bill_id) references bill(bill_id) ON DELETE CASCADE,foreign key(mess_id) references mess(mess_id));
+
+create table complaint(complaint_id varchar(50) primary key,description text,type text,date date,student_id varchar(50),admin_id varchar(50),foreign key (admin_id) references warden(admin_id),foreign key(student_id) references student(student_id));
+
+create table notice(notice_id varchar(50) primary key,description text,date date,admin_id varchar(50),foreign key (admin_id) references warden(admin_id));
+
+create table hostel(hostel_id varchar(50) primary key,name text,no_of_rooms int,admin_id varchar(50),foreign key(admin_id) references warden(admin_id));
+
+create table room(room_id varchar(50) primary key,occupancy int,capacity int,hostel_id varchar(50),foreign key(hostel_id) references hostel(hostel_id));
+
+create table mess(mess_id varchar(50) primary key,name text,capacity int,no_of_student int);
+
+create table bill(bill_id varchar(50) primary key,hostel_fee int,mess_fee int,other int,total int,paid int,pending int,admin_id varchar(50),foreign key(admin_id) references warden(admin_id));
+
+
+
+Entries:
+
+insert into mess values("M-101","rohini",100,66),("M-102","dipali",150,44),("M-103","ganesh",100,65),("M-104","rupali",50,88);
+
+insert into warden values("A-111","Nikhil",7721971166,"Kolhapur","1997-05-12"),("A-112","Lalit",8698375908,"Mumbai","1995-07-26"),("A-113","Harsh",9632587415,"Pune","1995-04-04"),("A-114","Ritesh",9595560425,"Nashik","1987-08-14");
+
+insert into hostel values("h-201","vishalgad",10,"a-111"),("h-202","torana",10,"a-112"),("h-203","raigad",10,"a-113"),("h-204","panhala",10,"a-114");
+
+insert into admin_login values("admin_nikhil","A-111","admnik"),("admin_lalit","A-112","admlal"),("admin_harsh","A-113","admhar"),("admin_ritesh","A-114","admrit");
+
+insert into room values("r-101",0,1,"h-201"),("r-102",0,1,"h-201"),("r-103",0,1,"h-201"),("r-104",0,1,"h-201"),("r-105",0,1,"h-201"),("r-106",0,1,"h-201"),("r-107",0,1,"h-201"),("r-108",0,1,"h-201"),("r-109",0,1,"h-201"),("r-110",0,1,"h-201");
+
+ insert into room values("r-111",0,1,"h-202"),("r-112",0,1,"h-202"),("r-113",0,1,"h-202"),("r-114",0,1,"h-202"),("r-115",0,1,"h-202"),("r-116",0,1,"h-202"),("r-117",0,1,"h-202"),("r-118",0,1,"h-202"),("r-119",0,1,"h-202"),("r-120",0,1,"h-202");
+
+insert into room values("r-121",0,1,"h-203"),("r-122",0,1,"h-203"),("r-123",0,1,"h-203"),("r-124",0,1,"h-203"),("r-125",0,1,"h-203"),("r-126",0,1,"h-203"),("r-127",0,1,"h-203"),("r-128",0,1,"h-203"),("r-129",0,1,"h-203"),("r-130",0,1,"h-203");
+
+insert into room values("r-131",0,1,"h-204"),("r-132",0,1,"h-204"),("r-133",0,1,"h-204"),("r-134",0,1,"h-204"),("r-135",0,1,"h-204"),("r-136",0,1,"h-204"),("r-137",0,1,"h-204"),("r-138",0,1,"h-204"),("r-139",0,1,"h-204"),("r-140",0,1,"h-204");
+
+SET FOREIGN_KEY_CHECKS=1;
+SET FOREIGN_KEY_CHECKS=0;
+
+create trigger history after insert on student
+for each row
+begin
+insert into student_history
+set student_id=new.student_id,
+name=new.name,
+email=new.email,
+cont_no=new.cont_no,
+dob=new.dob,
+room_id=new.room_id,
+hostel_id=new.hostel_id,
+bill_id=new.bill_id,
+mess_id=new.mess_id,
+address=new.address;
+end;

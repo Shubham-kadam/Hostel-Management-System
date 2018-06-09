@@ -1,0 +1,15 @@
+create trigger student_history after insert on student
+for each row
+begin
+insert into student_history
+set student_id=new.student_id,
+name=new.name,
+email=new.email,
+cont_no=new.cont_no,
+dob=new.dob,
+room_id=new.room_id,
+hostel_id=new.hostel_id,
+bill_id=new.bill_id,
+mess_id=new.mess_id,
+address=new.address;
+end;
